@@ -28,13 +28,14 @@ public class RobotContainer {
   private final CommandXboxController m_driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
 
-  private final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem(m_driverController);
-  private final Arm m_arm = new Arm(m_driverController);
+  private final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
+  private final Arm m_arm = new Arm();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
+
   }
 
   /**
