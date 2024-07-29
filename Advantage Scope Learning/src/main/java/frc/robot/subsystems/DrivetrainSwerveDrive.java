@@ -15,6 +15,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructArrayPublisher;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.GyroSim;
@@ -22,7 +23,7 @@ import frc.robot.SwerveModuleSim;
 
 public class DrivetrainSwerveDrive extends SubsystemBase {
   /** Creates a new DrivetrainSubsystem. */
-  public final Field2d m_field = new Field2d();
+  public final Field2d m_fieldSwerve = new Field2d();
   public final GyroSim m_gyro = new GyroSim();
   public final SwerveModuleSim m_frontLeftModule = new SwerveModuleSim();
   public final SwerveModuleSim m_frontRightModule = new SwerveModuleSim();
@@ -55,6 +56,7 @@ public class DrivetrainSwerveDrive extends SubsystemBase {
   
 
   public DrivetrainSwerveDrive(CommandXboxController driverController) {
+    SmartDashboard.putData("Field Swerve", m_fieldSwerve);
     m_driverController = driverController;
     m_rotationRadians = 0;
     fl_distance = 0;
@@ -69,7 +71,7 @@ public class DrivetrainSwerveDrive extends SubsystemBase {
       new SwerveModulePosition(0, new Rotation2d(0)),
       new SwerveModulePosition(0, new Rotation2d(0)),
       new SwerveModulePosition(0, new Rotation2d(0))
-      }, new Pose2d(5.0, 13.5, new Rotation2d()));
+      }, new Pose2d(0, 0, new Rotation2d()));
 
     publisher = NetworkTableInstance.getDefault()
     .getStructArrayTopic("MyStates", SwerveModuleState.struct).publish();
@@ -78,7 +80,7 @@ public class DrivetrainSwerveDrive extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    ChassisSpeeds speeds = new ChassisSpeeds(m_driverController.getLeftTriggerAxis(), m_driverController.getLeftY(), m_driverController.getLeftX());
+    ChassisSpeeds speeds = new ChassisSpeeds(m_driverController.getLeftTriggerAxis() * 5, m_driverController.getLeftY() * 5, m_driverController.getLeftX());
 
     SwerveModuleState[] moduleStates = m_kinematics.toSwerveModuleStates(speeds);
 
@@ -106,6 +108,7 @@ public class DrivetrainSwerveDrive extends SubsystemBase {
       backLeft,
       backRight
     });
+    m_fieldSwerve.setRobotPose(m_pose); 
   }
 
 }

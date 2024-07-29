@@ -10,18 +10,18 @@ import edu.wpi.first.wpilibj.Timer;
 public class SwerveModuleSim {
     public Timer timer = new Timer();
 
-    public double value;
+    public double meters;
 
     public SwerveModuleSim() {
         timer.start();
-        value = 0;
+        meters = 0;
     }
 
     public double getValue(double speedMetersPerSecond) {
         double time = timer.get();
         timer.reset();
         double value = speedMetersPerSecond * time;
-        value += value;
-        return value;
+        meters += value;
+        return meters;
     }
 }
