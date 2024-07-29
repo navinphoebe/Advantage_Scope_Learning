@@ -16,17 +16,19 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructArrayPublisher;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Gyro;
 
 public class DrivetrainSwerveDrive extends SubsystemBase {
   /** Creates a new DrivetrainSubsystem. */
   public final Field2d m_field = new Field2d();
+  public final Gyro m_gyro = new Gyro();
   public double m_x;
   public double m_y;
-  public double m_rotation; 
-  public double fl_rotation;
-  public double fr_rotation;
-  public double bl_rotation;
-  public double br_rotation; 
+  public double m_rotationRadians; 
+  public double fl_distance;
+  public double fr_distance;
+  public double bl_distance;
+  public double br_distance; 
   public static final double DRIVETRAIN_TRACKWIDTH_METERS = 6;
   public static final double DRIVETRAIN_WHEELBASE_METERS = 4;
   public SwerveDriveOdometry m_odometry;
@@ -46,20 +48,19 @@ public class DrivetrainSwerveDrive extends SubsystemBase {
   
 
   public DrivetrainSwerveDrive() {
-    // SmartDashboard.putData("Field", m_field);
-    m_rotation = 0;
-    fl_rotation = 0;
-    fr_rotation = 0;
-    bl_rotation = 0;
-    br_rotation = 0;
+    m_rotationRadians = 0;
+    fl_distance = 0;
+    fr_distance = 0;
+    bl_distance = 0;
+    br_distance = 0;
 
     m_odometry = new SwerveDriveOdometry(
-      m_kinematics, new Rotation2d(m_rotation),
+      m_kinematics, new Rotation2d(m_rotationRadians),
       new SwerveModulePosition[] {
-      new SwerveModulePosition(DRIVETRAIN_TRACKWIDTH_METERS, new Rotation2d(fl_rotation)),
-      new SwerveModulePosition(DRIVETRAIN_TRACKWIDTH_METERS, new Rotation2d(fr_rotation)),
-      new SwerveModulePosition(DRIVETRAIN_TRACKWIDTH_METERS, new Rotation2d(bl_rotation)),
-      new SwerveModulePosition(DRIVETRAIN_TRACKWIDTH_METERS, new Rotation2d(br_rotation))
+      new SwerveModulePosition(0, new Rotation2d(0)),
+      new SwerveModulePosition(0, new Rotation2d(0)),
+      new SwerveModulePosition(0, new Rotation2d(0)),
+      new SwerveModulePosition(0, new Rotation2d(0))
       }, new Pose2d(5.0, 13.5, new Rotation2d()));
 
     publisher = NetworkTableInstance.getDefault()
@@ -77,13 +78,18 @@ public class DrivetrainSwerveDrive extends SubsystemBase {
     frontRight = moduleStates[1];
     backLeft = moduleStates[2];
     backRight = moduleStates[3];
-
-    var m_pose = m_odometry.update(new Rotation2d(m_rotation),
+    double frontLeftDistance = m_gyro.getFLValue(frontLeft.speedMetersPerSecond);
+    double frontRightDistance = m_gyro.getFRValue(frontRight.speedMetersPerSecond);
+    double backLeftDistance = m_gyro.getBLValue(backLeft.speedMetersPerSecond);
+    double backRightDistance = m_gyro.getBRValue(backRight.speedMetersPerSecond);
+    m_rotationRadians = m_gyro.getGyroValueAdded(speeds.omegaRadiansPerSecond / 50);
+    // update gyro and distance
+    var m_pose = m_odometry.update(new Rotation2d(m_rotationRadians),
     new SwerveModulePosition[] {
-      new SwerveModulePosition(DRIVETRAIN_TRACKWIDTH_METERS, new Rotation2d(fl_rotation)),
-      new SwerveModulePosition(DRIVETRAIN_TRACKWIDTH_METERS, new Rotation2d(fr_rotation)),
-      new SwerveModulePosition(DRIVETRAIN_TRACKWIDTH_METERS, new Rotation2d(bl_rotation)),
-      new SwerveModulePosition(DRIVETRAIN_TRACKWIDTH_METERS, new Rotation2d(br_rotation))
+      new SwerveModulePosition(frontLeftDistance, frontLeft.angle),
+      new SwerveModulePosition(frontRightDistance, frontRight.angle),
+      new SwerveModulePosition(backLeftDistance, backLeft.angle),
+      new SwerveModulePosition(backRightDistance, backRight.angle)
       });
 
     publisher.set(new SwerveModuleState[] {
