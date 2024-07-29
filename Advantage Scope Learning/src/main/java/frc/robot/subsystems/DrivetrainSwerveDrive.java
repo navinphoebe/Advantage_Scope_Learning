@@ -16,6 +16,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructArrayPublisher;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Gyro;
 
 public class DrivetrainSwerveDrive extends SubsystemBase {
@@ -36,6 +37,7 @@ public class DrivetrainSwerveDrive extends SubsystemBase {
   public SwerveModuleState frontRight;
   public SwerveModuleState backLeft;
   public SwerveModuleState backRight;
+  private CommandXboxController m_driverController;
   private final StructArrayPublisher<SwerveModuleState> publisher;
 
 
@@ -47,7 +49,8 @@ public class DrivetrainSwerveDrive extends SubsystemBase {
   );
   
 
-  public DrivetrainSwerveDrive() {
+  public DrivetrainSwerveDrive(CommandXboxController driverController) {
+    m_driverController = driverController;
     m_rotationRadians = 0;
     fl_distance = 0;
     fr_distance = 0;
@@ -70,7 +73,7 @@ public class DrivetrainSwerveDrive extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    ChassisSpeeds speeds = new ChassisSpeeds(1.0, 3.0, 1.5);
+    ChassisSpeeds speeds = new ChassisSpeeds(m_driverController.getLeftX(), m_driverController.getLeftY(), m_driverController.getRightX());
 
     SwerveModuleState[] moduleStates = m_kinematics.toSwerveModuleStates(speeds);
 

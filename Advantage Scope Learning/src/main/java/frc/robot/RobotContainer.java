@@ -9,6 +9,7 @@ import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.DrivetrainSubsystem;
+import frc.robot.subsystems.DrivetrainSwerveDrive;
 import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -29,6 +30,7 @@ public class RobotContainer {
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
 
   private final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
+  private final DrivetrainSwerveDrive m_swerveDrive = new DrivetrainSwerveDrive(m_driverController);
   private final Arm m_arm = new Arm();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
