@@ -37,6 +37,7 @@ public class Gyro {
 
     public double getFLValue(double speedMetersPerSecond) {
         double time = flTimer.get();
+        flTimer.reset();
         double value = speedMetersPerSecond * time;
         flValue += value;
         return flValue;
@@ -44,6 +45,7 @@ public class Gyro {
 
     public double getFRValue(double speedMetersPerSecond) {
         double time = frTimer.get();
+        frTimer.reset();
         double value = speedMetersPerSecond * time;
         frValue += value;
         return frValue;
@@ -51,6 +53,7 @@ public class Gyro {
 
     public double getBLValue(double speedMetersPerSecond) {
         double time = blTimer.get();
+        blTimer.reset();
         double value = speedMetersPerSecond * time;
         blValue += value;
         return blValue;
@@ -58,6 +61,7 @@ public class Gyro {
 
     public double getBRValue(double speedMetersPerSecond) {
         double time = brTimer.get();
+        brTimer.reset();
         double value = speedMetersPerSecond * time;
         brValue += value;
         return brValue;
@@ -65,6 +69,7 @@ public class Gyro {
 
     public double getGyroValueAdded(double omegaRadiansPerSecond) {
         double time = rotateTimer.get();
+        rotateTimer.reset();
         double value = omegaRadiansPerSecond * time;
         rotateValue += value;
         return rotateValue;
