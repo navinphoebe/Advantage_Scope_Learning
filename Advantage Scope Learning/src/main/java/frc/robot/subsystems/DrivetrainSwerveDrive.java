@@ -73,7 +73,7 @@ public class DrivetrainSwerveDrive extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    ChassisSpeeds speeds = new ChassisSpeeds(m_driverController.getLeftX(), m_driverController.getLeftY(), m_driverController.getRightX());
+    ChassisSpeeds speeds = new ChassisSpeeds(m_driverController.getLeftTriggerAxis(), m_driverController.getLeftY(), m_driverController.getLeftX());
 
     SwerveModuleState[] moduleStates = m_kinematics.toSwerveModuleStates(speeds);
 
