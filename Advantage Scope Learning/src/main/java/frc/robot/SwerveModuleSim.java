@@ -4,5 +4,24 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.Timer;
+
 /** Add your docs here. */
-public class SwerveModuleSim {}
+public class SwerveModuleSim {
+    public Timer timer = new Timer();
+
+    public double value;
+
+    public SwerveModuleSim() {
+        timer.start();
+        value = 0;
+    }
+
+    public double getValue(double speedMetersPerSecond) {
+        double time = timer.get();
+        timer.reset();
+        double value = speedMetersPerSecond * time;
+        value += value;
+        return value;
+    }
+}

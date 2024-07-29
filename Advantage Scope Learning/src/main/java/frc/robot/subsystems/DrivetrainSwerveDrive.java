@@ -18,11 +18,16 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Gyro;
+import frc.robot.SwerveModuleSim;
 
 public class DrivetrainSwerveDrive extends SubsystemBase {
   /** Creates a new DrivetrainSubsystem. */
   public final Field2d m_field = new Field2d();
   public final Gyro m_gyro = new Gyro();
+  public final SwerveModuleSim m_frontLeftModule = new SwerveModuleSim();
+  public final SwerveModuleSim m_frontRightModule = new SwerveModuleSim();
+  public final SwerveModuleSim m_backLeftModule = new SwerveModuleSim();
+  public final SwerveModuleSim m_backRightModule = new SwerveModuleSim();
   public double m_x;
   public double m_y;
   public double m_rotationRadians; 
@@ -81,10 +86,10 @@ public class DrivetrainSwerveDrive extends SubsystemBase {
     frontRight = moduleStates[1];
     backLeft = moduleStates[2];
     backRight = moduleStates[3];
-    double frontLeftDistance = m_gyro.getFLValue(frontLeft.speedMetersPerSecond);
-    double frontRightDistance = m_gyro.getFRValue(frontRight.speedMetersPerSecond);
-    double backLeftDistance = m_gyro.getBLValue(backLeft.speedMetersPerSecond);
-    double backRightDistance = m_gyro.getBRValue(backRight.speedMetersPerSecond);
+    double frontLeftDistance = m_frontLeftModule.getValue(frontLeft.speedMetersPerSecond);
+    double frontRightDistance = m_frontRightModule.getValue(frontRight.speedMetersPerSecond);
+    double backLeftDistance = m_backLeftModule.getValue(backLeft.speedMetersPerSecond);
+    double backRightDistance = m_backRightModule.getValue(backRight.speedMetersPerSecond);
     m_rotationRadians = m_gyro.getGyroValueAdded(speeds.omegaRadiansPerSecond / 50);
     // update gyro and distance
     var m_pose = m_odometry.update(new Rotation2d(m_rotationRadians),
