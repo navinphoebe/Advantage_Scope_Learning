@@ -7,13 +7,13 @@ package frc.robot;
 import edu.wpi.first.wpilibj.Timer;
 
 /** Add your docs here. */
-public class Gyro {
+public class GyroSim {
 
     public Timer rotateTimer = new Timer();
 
     public double rotateValue;
 
-    public Gyro() {
+    public GyroSim() {
         rotateTimer.start();
 
         rotateValue = 0;

@@ -17,13 +17,13 @@ import edu.wpi.first.networktables.StructArrayPublisher;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.Gyro;
+import frc.robot.GyroSim;
 import frc.robot.SwerveModuleSim;
 
 public class DrivetrainSwerveDrive extends SubsystemBase {
   /** Creates a new DrivetrainSubsystem. */
   public final Field2d m_field = new Field2d();
-  public final Gyro m_gyro = new Gyro();
+  public final GyroSim m_gyro = new GyroSim();
   public final SwerveModuleSim m_frontLeftModule = new SwerveModuleSim();
   public final SwerveModuleSim m_frontRightModule = new SwerveModuleSim();
   public final SwerveModuleSim m_backLeftModule = new SwerveModuleSim();
