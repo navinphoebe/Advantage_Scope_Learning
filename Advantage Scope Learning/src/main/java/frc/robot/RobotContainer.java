@@ -6,11 +6,17 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
+import frc.robot.commands.DrivetrainDefaultCommand;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.DrivetrainSwerveDrive;
 import frc.robot.subsystems.ExampleSubsystem;
+
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.path.PathPlannerPath;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -56,11 +62,12 @@ public class RobotContainer {
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
+    m_swerveDrive.setDefaultCommand(getSwerveDriveCommand());
     
-   m_driverController.b().onTrue(m_arm.initialPosition());
-   m_driverController.x().onTrue(m_arm.groundPickup());
-   m_driverController.y().onTrue(m_arm.defendedScoring());
-   m_driverController.a().onTrue(m_arm.ampScoring());
+    m_driverController.b().onTrue(m_arm.initialPosition());
+    m_driverController.x().onTrue(m_arm.groundPickup());
+    m_driverController.y().onTrue(m_arm.defendedScoring());
+    m_driverController.a().onTrue(m_arm.ampScoring());
   }
 
   /**
@@ -70,6 +77,14 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return Autos.exampleAuto(m_exampleSubsystem);
+     PathPlannerPath path = PathPlannerPath.fromPathFile("Example Path");
+
+    // Create a path following command using AutoBuilder. This will also trigger event markers.
+    return AutoBuilder.followPath(path);
+  }
+
+  public Command getSwerveDriveCommand() {
+    return new DrivetrainDefaultCommand(
+        m_swerveDrive, m_driverController);
   }
 }

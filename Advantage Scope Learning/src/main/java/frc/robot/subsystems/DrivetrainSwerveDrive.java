@@ -4,6 +4,11 @@
 
 package frc.robot.subsystems;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+import com.pathplanner.lib.util.PIDConstants;
+import com.pathplanner.lib.util.ReplanningConfig;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -14,10 +19,10 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructArrayPublisher;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.GyroSim;
 import frc.robot.SwerveModuleSim;
 
@@ -29,6 +34,8 @@ public class DrivetrainSwerveDrive extends SubsystemBase {
   public final SwerveModuleSim m_frontRightModule = new SwerveModuleSim();
   public final SwerveModuleSim m_backLeftModule = new SwerveModuleSim();
   public final SwerveModuleSim m_backRightModule = new SwerveModuleSim();
+  public ChassisSpeeds m_speeds = new ChassisSpeeds(0, 0, 0);
+  public Pose2d m_pose;
   public double m_x;
   public double m_y;
   public double m_rotationRadians; 
@@ -43,7 +50,6 @@ public class DrivetrainSwerveDrive extends SubsystemBase {
   public SwerveModuleState frontRight;
   public SwerveModuleState backLeft;
   public SwerveModuleState backRight;
-  private CommandXboxController m_driverController;
   private final StructArrayPublisher<SwerveModuleState> publisher;
 
 
@@ -55,9 +61,8 @@ public class DrivetrainSwerveDrive extends SubsystemBase {
   );
   
 
-  public DrivetrainSwerveDrive(CommandXboxController driverController) {
+  public DrivetrainSwerveDrive() {
     SmartDashboard.putData("Field Swerve", m_fieldSwerve);
-    m_driverController = driverController;
     m_rotationRadians = 0;
     fl_distance = 0;
     fr_distance = 0;
@@ -75,14 +80,53 @@ public class DrivetrainSwerveDrive extends SubsystemBase {
 
     publisher = NetworkTableInstance.getDefault()
     .getStructArrayTopic("MyStates", SwerveModuleState.struct).publish();
+
+    AutoBuilder.configureHolonomic(
+            this::getPose, // Robot pose supplier
+            this::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
+            this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+            this::driveRobotRelative, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
+            new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
+                    new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
+                    new PIDConstants(5.0, 0.0, 0.0), // Rotation PID constants
+                    4.5, // Max module speed, in m/s
+                    0.4, // Drive base radius in meters. Distance from robot center to furthest module.
+                    new ReplanningConfig() // Default path replanning config. See the API for the options here
+            ),
+            () -> {
+              // Boolean supplier that controls when the path will be mirrored for the red alliance
+              // This will flip the path being followed to the red side of the field.
+              // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+
+              var alliance = DriverStation.getAlliance();
+              if (alliance.isPresent()) {
+                return alliance.get() == DriverStation.Alliance.Red;
+              }
+              return false;
+            },
+            this // Reference to this subsystem to set requirements
+    );
     }
+
+  public Pose2d getPose() {
+    return m_pose;
+  }
+
+  public void resetPose(Pose2d pose) {
+    m_pose = pose;
+  }
+
+  public ChassisSpeeds getRobotRelativeSpeeds() {
+    return m_speeds;
+  }
+
+  public void driveRobotRelative(ChassisSpeeds speeds) {
+    m_speeds = speeds;
+  }
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
-    ChassisSpeeds speeds = new ChassisSpeeds(m_driverController.getLeftTriggerAxis() * 5, m_driverController.getLeftY() * 5, m_driverController.getLeftX());
-
-    SwerveModuleState[] moduleStates = m_kinematics.toSwerveModuleStates(speeds);
+    SwerveModuleState[] moduleStates = m_kinematics.toSwerveModuleStates(m_speeds);
 
     frontLeft = moduleStates[0];
     frontRight = moduleStates[1];
@@ -92,9 +136,9 @@ public class DrivetrainSwerveDrive extends SubsystemBase {
     double frontRightDistance = m_frontRightModule.getValue(frontRight.speedMetersPerSecond);
     double backLeftDistance = m_backLeftModule.getValue(backLeft.speedMetersPerSecond);
     double backRightDistance = m_backRightModule.getValue(backRight.speedMetersPerSecond);
-    m_rotationRadians = m_gyro.getGyroValueAdded(speeds.omegaRadiansPerSecond / 50);
+    m_rotationRadians = m_gyro.getGyroValueAdded(m_speeds.omegaRadiansPerSecond);
     // update gyro and distance
-    var m_pose = m_odometry.update(new Rotation2d(m_rotationRadians),
+    m_pose = m_odometry.update(new Rotation2d(m_rotationRadians),
     new SwerveModulePosition[] {
       new SwerveModulePosition(frontLeftDistance, frontLeft.angle),
       new SwerveModulePosition(frontRightDistance, frontRight.angle),
