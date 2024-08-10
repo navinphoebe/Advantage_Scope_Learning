@@ -89,7 +89,7 @@ public class DrivetrainSwerveDrive extends SubsystemBase {
             new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
                     new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
                     new PIDConstants(5.0, 0.0, 0.0), // Rotation PID constants
-                    4.5, // Max module speed, in m/s
+                    1, // Max module speed, in m/s
                     0.4, // Drive base radius in meters. Distance from robot center to furthest module.
                     new ReplanningConfig() // Default path replanning config. See the API for the options here
             ),
@@ -98,10 +98,10 @@ public class DrivetrainSwerveDrive extends SubsystemBase {
               // This will flip the path being followed to the red side of the field.
               // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
 
-              var alliance = DriverStation.getAlliance();
+              /* var alliance = DriverStation.getAlliance();
               if (alliance.isPresent()) {
                 return alliance.get() == DriverStation.Alliance.Red;
-              }
+              } */
               return false;
             },
             this // Reference to this subsystem to set requirements
@@ -109,11 +109,29 @@ public class DrivetrainSwerveDrive extends SubsystemBase {
     }
 
   public Pose2d getPose() {
-    return m_pose;
+    return m_odometry.getPoseMeters();
   }
 
   public void resetPose(Pose2d pose) {
-    m_pose = pose;
+    SwerveModuleState[] moduleStates = m_kinematics.toSwerveModuleStates(m_speeds);
+
+    frontLeft = moduleStates[0];
+    frontRight = moduleStates[1];
+    backLeft = moduleStates[2];
+    backRight = moduleStates[3];
+    double frontLeftDistance = m_frontLeftModule.getValue(frontLeft.speedMetersPerSecond);
+    double frontRightDistance = m_frontRightModule.getValue(frontRight.speedMetersPerSecond);
+    double backLeftDistance = m_backLeftModule.getValue(backLeft.speedMetersPerSecond);
+    double backRightDistance = m_backRightModule.getValue(backRight.speedMetersPerSecond);
+    m_rotationRadians = m_gyro.getGyroValueAdded(m_speeds.omegaRadiansPerSecond);
+    // update gyro and distance
+    m_odometry.resetPosition(new Rotation2d(m_rotationRadians),
+    new SwerveModulePosition[] {
+      new SwerveModulePosition(frontLeftDistance, frontLeft.angle),
+      new SwerveModulePosition(frontRightDistance, frontRight.angle),
+      new SwerveModulePosition(backLeftDistance, backLeft.angle),
+      new SwerveModulePosition(backRightDistance, backRight.angle)
+      }, pose);
   }
 
   public ChassisSpeeds getRobotRelativeSpeeds() {

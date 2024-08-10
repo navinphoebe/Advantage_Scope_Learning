@@ -13,10 +13,18 @@ import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.DrivetrainSwerveDrive;
 import frc.robot.subsystems.ExampleSubsystem;
 
+import java.util.List;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.path.GoalEndState;
+import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -36,7 +44,7 @@ public class RobotContainer {
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
 
   private final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
-  private final DrivetrainSwerveDrive m_swerveDrive = new DrivetrainSwerveDrive(m_driverController);
+  private final DrivetrainSwerveDrive m_swerveDrive = new DrivetrainSwerveDrive();
   private final Arm m_arm = new Arm();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -77,11 +85,31 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-     PathPlannerPath path = PathPlannerPath.fromPathFile("Example Path");
+     PathPlannerPath path = PathPlannerPath.fromPathFile("New New Path");
 
-    // Create a path following command using AutoBuilder. This will also trigger event markers.
+    // how to add navagation gridddd??
+  } 
+/* 
+  public Command getAutonomousCommand() {
+    List<Translation2d> bezierPoints = PathPlannerPath.bezierFromPoses(
+        new Pose2d(0, 0, Rotation2d.fromDegrees(0)),
+        new Pose2d(1.74, 7.67, Rotation2d.fromDegrees(26.57)),
+        new Pose2d(14.66, 6.81, Rotation2d.fromDegrees(-36.28)),
+        new Pose2d(14.95, 1.38, Rotation2d.fromDegrees(-101.98)),
+        new Pose2d(0, 0, Rotation2d.fromDegrees(-26.57))
+    );
+
+    // Create the path using the bezier points created above
+    PathPlannerPath path = new PathPlannerPath(
+        bezierPoints,
+        new PathConstraints(3.0, 3.0, 2 * Math.PI, 4 * Math.PI), // The constraints for this path. If using a differential drivetrain, the angular constraints have no effect.
+        new GoalEndState(0.0, Rotation2d.fromDegrees(-90)) // Goal end state. You can set a holonomic rotation here. If using a differential drivetrain, the rotation will have no effect.
+    );
+
+    // Prevent the path from being flipped if the coordinates are already correct
+    path.preventFlipping =true;
     return AutoBuilder.followPath(path);
-  }
+  } */
 
   public Command getSwerveDriveCommand() {
     return new DrivetrainDefaultCommand(
