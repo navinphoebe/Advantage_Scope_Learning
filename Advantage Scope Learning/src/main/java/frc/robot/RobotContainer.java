@@ -82,6 +82,7 @@ public class RobotContainer {
 
     m_chooser.setDefaultOption("Follow Path", getFollowTestPathCommand());
     m_chooser.addOption("On the Fly", getOnTheFlyPathComamand());
+    m_chooser.addOption("Navagation Grid", getNavigationGridDemoPathCommand());
     SmartDashboard.putData(m_chooser);
   }
 
@@ -121,25 +122,21 @@ public class RobotContainer {
     return AutoBuilder.followPath(path);
   } 
 
-  public Command getNavagationCommand() {
-    List<Translation2d> bezierPoints = PathPlannerPath.bezierFromPoses(
-        new Pose2d(0, 0, Rotation2d.fromDegrees(0)),
-        new Pose2d(1.74, 7.67, Rotation2d.fromDegrees(26.57)),
-        new Pose2d(14.66, 6.81, Rotation2d.fromDegrees(-36.28)),
-        new Pose2d(14.95, 1.38, Rotation2d.fromDegrees(-101.98)),
-        new Pose2d(0, 0, Rotation2d.fromDegrees(-26.57))
-    );
+  public Command getNavigationGridDemoPathCommand() { 
+    Pose2d targetPose = new Pose2d(10, 5, Rotation2d.fromDegrees(180));
 
-    // Create the path using the bezier points created above
-    PathPlannerPath path = new PathPlannerPath(
-        bezierPoints,
-        new PathConstraints(3.0, 3.0, 2 * Math.PI, 4 * Math.PI), // The constraints for this path. If using a differential drivetrain, the angular constraints have no effect.
-        new GoalEndState(0.0, Rotation2d.fromDegrees(-90)) // Goal end state. You can set a holonomic rotation here. If using a differential drivetrain, the rotation will have no effect.
-    );
+    // Create the constraints to use while pathfinding
+    PathConstraints constraints = new PathConstraints(
+            3.0, 4.0,
+            Units.degreesToRadians(540), Units.degreesToRadians(720));
 
-    // Prevent the path from being flipped if the coordinates are already correct
-    path.preventFlipping =true;
-    return AutoBuilder.followPath(path);
+    // Since AutoBuilder is configured, we can use it to build pathfinding commands
+      return AutoBuilder.pathfindToPose(
+              targetPose,
+              constraints,
+              0.0, // Goal end velocity in meters/sec
+              0.0 // Rotation delay distance in meters. This is how far the robot should travel before attempting to rotate.
+    );
   }
 
   public Command getSwerveDriveCommand() {
