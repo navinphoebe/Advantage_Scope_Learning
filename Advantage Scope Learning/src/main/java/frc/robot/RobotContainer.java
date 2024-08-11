@@ -123,7 +123,7 @@ public class RobotContainer {
   } 
 
   public Command getNavigationGridDemoPathCommand() { 
-    Pose2d targetPose = new Pose2d(10, 5, Rotation2d.fromDegrees(180));
+    Pose2d targetPose = new Pose2d(8, 4, Rotation2d.fromDegrees(180));
 
     // Create the constraints to use while pathfinding
     PathConstraints constraints = new PathConstraints(
