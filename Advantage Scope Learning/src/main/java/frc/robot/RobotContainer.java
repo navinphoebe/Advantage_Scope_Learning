@@ -25,6 +25,8 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -47,6 +49,7 @@ public class RobotContainer {
   private final DrivetrainSwerveDrive m_swerveDrive = new DrivetrainSwerveDrive();
   private final Arm m_arm = new Arm();
 
+  SendableChooser<Command> m_chooser = new SendableChooser<>();
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
@@ -76,6 +79,10 @@ public class RobotContainer {
     m_driverController.x().onTrue(m_arm.groundPickup());
     m_driverController.y().onTrue(m_arm.defendedScoring());
     m_driverController.a().onTrue(m_arm.ampScoring());
+
+    m_chooser.setDefaultOption("Follow Path", getFollowTestPathCommand());
+    m_chooser.addOption("On the Fly", getOnTheFlyPathComamand());
+    SmartDashboard.putData(m_chooser);
   }
 
   /**
@@ -83,14 +90,17 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
-  /* 
+  
   public Command getAutonomousCommand() {
+    return m_chooser.getSelected();
+  }
+  public Command getFollowTestPathCommand() {
     // An example command will be run in autonomous
      PathPlannerPath path = PathPlannerPath.fromPathFile("New New Path");
 
-    // how to add navagation grid?
-  }  */
-  public Command getAutonomousCommand() {
+    return AutoBuilder.followPath(path);
+  } 
+  public Command getOnTheFlyPathComamand() {
     List<Translation2d> bezierPoints = PathPlannerPath.bezierFromPoses(
         new Pose2d(0, 0, Rotation2d.fromDegrees(0)),
         new Pose2d(1.74, 7.67, Rotation2d.fromDegrees(26.57)),
@@ -110,6 +120,27 @@ public class RobotContainer {
     path.preventFlipping =true;
     return AutoBuilder.followPath(path);
   } 
+
+  public Command getNavagationCommand() {
+    List<Translation2d> bezierPoints = PathPlannerPath.bezierFromPoses(
+        new Pose2d(0, 0, Rotation2d.fromDegrees(0)),
+        new Pose2d(1.74, 7.67, Rotation2d.fromDegrees(26.57)),
+        new Pose2d(14.66, 6.81, Rotation2d.fromDegrees(-36.28)),
+        new Pose2d(14.95, 1.38, Rotation2d.fromDegrees(-101.98)),
+        new Pose2d(0, 0, Rotation2d.fromDegrees(-26.57))
+    );
+
+    // Create the path using the bezier points created above
+    PathPlannerPath path = new PathPlannerPath(
+        bezierPoints,
+        new PathConstraints(3.0, 3.0, 2 * Math.PI, 4 * Math.PI), // The constraints for this path. If using a differential drivetrain, the angular constraints have no effect.
+        new GoalEndState(0.0, Rotation2d.fromDegrees(-90)) // Goal end state. You can set a holonomic rotation here. If using a differential drivetrain, the rotation will have no effect.
+    );
+
+    // Prevent the path from being flipped if the coordinates are already correct
+    path.preventFlipping =true;
+    return AutoBuilder.followPath(path);
+  }
 
   public Command getSwerveDriveCommand() {
     return new DrivetrainDefaultCommand(

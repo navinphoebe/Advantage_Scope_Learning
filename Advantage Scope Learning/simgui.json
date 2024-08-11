@@ -4,7 +4,15 @@
       "/FMSInfo": "FMSInfo",
       "/SmartDashboard/Field": "Field2d",
       "/SmartDashboard/Field Swerve": "Field2d",
-      "/SmartDashboard/MyMechanism": "Mechanism2d"
+      "/SmartDashboard/MyMechanism": "Mechanism2d",
+      "/SmartDashboard/SendableChooser[0]": "String Chooser"
+    },
+    "windows": {
+      "/SmartDashboard/SendableChooser[0]": {
+        "window": {
+          "visible": true
+        }
+      }
     }
   },
   "NetworkTables Info": {
