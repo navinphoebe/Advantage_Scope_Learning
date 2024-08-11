@@ -83,13 +83,13 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
+  /* 
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
      PathPlannerPath path = PathPlannerPath.fromPathFile("New New Path");
 
-    // how to add navagation gridddd??
-  } 
-/* 
+    // how to add navagation grid?
+  }  */
   public Command getAutonomousCommand() {
     List<Translation2d> bezierPoints = PathPlannerPath.bezierFromPoses(
         new Pose2d(0, 0, Rotation2d.fromDegrees(0)),
@@ -109,7 +109,7 @@ public class RobotContainer {
     // Prevent the path from being flipped if the coordinates are already correct
     path.preventFlipping =true;
     return AutoBuilder.followPath(path);
-  } */
+  } 
 
   public Command getSwerveDriveCommand() {
     return new DrivetrainDefaultCommand(
