@@ -63,7 +63,14 @@ public class Robot extends LoggedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
-    
+    var alliance = DriverStation.getAlliance();
+    if (alliance.isPresent() && alliance.get() == DriverStation.Alliance.Red) {
+      m_robotContainer.m_positionChooser = m_robotContainer.m_redChooser;
+    } else if (alliance.isPresent() && alliance.get() == DriverStation.Alliance.Blue) {
+      m_robotContainer.m_positionChooser = m_robotContainer.m_blueChooser;
+    } 
+    SmartDashboard.putData("Target Position Command", m_robotContainer.getTargetPositionCommand());
+    SmartDashboard.putData("Target Chooser", m_robotContainer.m_positionChooser);
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
