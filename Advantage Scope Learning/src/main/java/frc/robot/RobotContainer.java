@@ -99,16 +99,16 @@ public class RobotContainer {
     m_redChooser.addOption("Red Notes Pickup 2", goToTargetPosition(1.04, 1.01, -90));
     m_redChooser.addOption("Red Notes Pickup 3", goToTargetPosition(1.60, .53, -90));
 
-    m_blueChooser.setDefaultOption("Blue Amp Scoring", goToTargetPosition(1.66,7.61,90));
-    m_blueChooser.addOption("Blue Speaker 1", goToTargetPosition(.75, 6.01,0));
-    m_blueChooser.addOption("Blue Speaker 2", goToTargetPosition(1.45,5.56,0));
-    m_blueChooser.addOption("Blue Speaker 3", goToTargetPosition(.76,4.26,0));
-    m_blueChooser.addOption("Blue Stage 1", goToTargetPosition(4.17, 5.05, 0));
-    m_blueChooser.addOption("Blue Stage 2", goToTargetPosition(4.28, 3.16, 0));
-    m_blueChooser.addOption("Blue Stage 3", goToTargetPosition(5.98, 4.13, 0));
+    m_blueChooser.setDefaultOption("Blue Amp Scoring", goToTargetPosition(1.66,7.61, 90));
+    m_blueChooser.addOption("Blue Speaker 1", goToTargetPosition(.75, 6.01, 45));
+    m_blueChooser.addOption("Blue Speaker 2", goToTargetPosition(1.45,5.56, 0));
+    m_blueChooser.addOption("Blue Speaker 3", goToTargetPosition(.76,4.26, -45));
+    m_blueChooser.addOption("Blue Stage 1", goToTargetPosition(4.17, 5.05, -45));
+    m_blueChooser.addOption("Blue Stage 2", goToTargetPosition(4.28, 3.16, 45));
+    m_blueChooser.addOption("Blue Stage 3", goToTargetPosition(5.98, 4.13, 180));
     m_blueChooser.addOption("Blue Notes Pickup 1", goToTargetPosition(16.09, 1.41, 0));
-    m_blueChooser.addOption("Blue Notes Pickup 2", goToTargetPosition(15.52, 1.10, 0));
-    m_blueChooser.addOption("Blue Notes Pickup 3", goToTargetPosition(14.85, .76, 0)); 
+    m_blueChooser.addOption("Blue Notes Pickup 2", goToTargetPosition(15.52, 1.10, -45));
+    m_blueChooser.addOption("Blue Notes Pickup 3", goToTargetPosition(14.85, .76, -45)); 
 
     SmartDashboard.putData("Target Position Command", getTargetPositionCommand());
     SmartDashboard.putData("Target Chooser", m_positionChooser);
