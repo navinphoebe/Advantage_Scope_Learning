@@ -20,11 +20,6 @@
           "visible": true
         }
       },
-      "/SmartDashboard/SendableChooser[0]": {
-        "window": {
-          "visible": true
-        }
-      },
       "/SmartDashboard/Target Chooser": {
         "window": {
           "visible": true

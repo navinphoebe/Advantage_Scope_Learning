@@ -69,8 +69,9 @@ public class Robot extends LoggedRobot {
     } else if (alliance.isPresent() && alliance.get() == DriverStation.Alliance.Blue) {
       m_robotContainer.m_positionChooser = m_robotContainer.m_blueChooser;
     } 
-    SmartDashboard.putData("Target Position Command", m_robotContainer.getTargetPositionCommand());
+    
     SmartDashboard.putData("Target Chooser", m_robotContainer.m_positionChooser);
+    SmartDashboard.putData("Target Position Command", m_robotContainer.getTargetPositionCommand());
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
