@@ -142,6 +142,10 @@ public class DrivetrainSwerveDrive extends SubsystemBase {
     m_speeds = speeds;
   }
 
+  public void driveFieldRelative(ChassisSpeeds speeds) {
+    m_speeds = speeds;
+  }
+
   @Override
   public void periodic() {
     SwerveModuleState[] moduleStates = m_kinematics.toSwerveModuleStates(m_speeds);

@@ -16,4 +16,8 @@ public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
   }
+
+public static final double MAX_VELOCITY_METERS_PER_SECOND = 4.0;
+public static final double DRIVE_MAX_TURN_RADIANS_PER_SECOND = 7.0;
+public static final double CONTROLLER_DEADBAND_VALUE = 0.05;
 }

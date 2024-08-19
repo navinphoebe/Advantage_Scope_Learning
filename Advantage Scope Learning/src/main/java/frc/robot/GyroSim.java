@@ -19,6 +19,10 @@ public class GyroSim {
         rotateValue = 0;
     }
 
+    public double getAngle() {
+        return rotateValue;
+    }
+
     public double getGyroValueAdded(double omegaRadiansPerSecond) {
         double time = rotateTimer.get();
         rotateTimer.reset();

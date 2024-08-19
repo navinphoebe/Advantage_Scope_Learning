@@ -4,11 +4,15 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.Constants;
 import frc.robot.Robot;
+import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.DrivetrainSwerveDrive;
 
 public class DrivetrainDefaultCommand extends Command {
@@ -31,8 +35,28 @@ public class DrivetrainDefaultCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    _chassisSpeeds = new ChassisSpeeds(m_driverController.getLeftX(), m_driverController.getLeftY(), m_driverController.getRightX());
-    m_drivetrain.driveRobotRelative(_chassisSpeeds);
+    double controllerDirection = DriverStation.getAlliance().get() == DriverStation.Alliance.Red ? 1 : -1;
+    double x = m_driverController.getRawAxis(1) * controllerDirection;
+    double y = m_driverController.getRawAxis(0) * controllerDirection;
+    double r = m_driverController.getRawAxis(2) * -1;
+    x = applyDeadband(x);
+    y = applyDeadband(y);
+    r = applyDeadband(r);
+    x = x * Constants.MAX_VELOCITY_METERS_PER_SECOND;
+    y = y * Constants.MAX_VELOCITY_METERS_PER_SECOND;
+    r = r * Constants.DRIVE_MAX_TURN_RADIANS_PER_SECOND;
+
+    _chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(x, y, r, new Rotation2d(m_drivetrain.m_gyro.getAngle()));
+
+    m_drivetrain.driveFieldRelative(_chassisSpeeds);
+  }
+
+  private double applyDeadband(double x) {
+    if (Math.abs(x) > Constants.CONTROLLER_DEADBAND_VALUE) {
+      return x;
+    } else {
+      return 0;
+    }
   }
 
   // Called once the command ends or is interrupted.
