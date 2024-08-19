@@ -177,30 +177,19 @@ public class DrivetrainSubsystemReal extends SubsystemBase implements Drivetrain
 
   @Override
   public void resetPose(Pose2d pose) {
-    SwerveModuleState[] moduleStates = m_kinematics.toSwerveModuleStates(m_speeds);
-
-    frontLeft = moduleStates[0];
-    frontRight = moduleStates[1];
-    backLeft = moduleStates[2];
-    backRight = moduleStates[3];
-    double frontLeftDistance = m_frontLeftModule.getValue(frontLeft.speedMetersPerSecond);
-    double frontRightDistance = m_frontRightModule.getValue(frontRight.speedMetersPerSecond);
-    double backLeftDistance = m_backLeftModule.getValue(backLeft.speedMetersPerSecond);
-    double backRightDistance = m_backRightModule.getValue(backRight.speedMetersPerSecond);
-    m_rotationRadians = m_gyro.getGyroValueAdded(m_speeds.omegaRadiansPerSecond);
-    // update gyro and distance
-    m_odometry.resetPosition(new Rotation2d(m_rotationRadians),
-    new SwerveModulePosition[] {
-      new SwerveModulePosition(frontLeftDistance, frontLeft.angle),
-      new SwerveModulePosition(frontRightDistance, frontRight.angle),
-      new SwerveModulePosition(backLeftDistance, backLeft.angle),
-      new SwerveModulePosition(backRightDistance, backRight.angle)
+    _odometryFromHardware.resetPosition(
+      this.getGyroscopeRotation(), 
+      new SwerveModulePosition[] {
+        m_frontLeftModule.getPosition(),
+        m_frontRightModule.getPosition(),
+        m_backLeftModule.getPosition(),
+        m_backRightModule.getPosition()
       }, pose);
   }
 
   @Override 
   public void setDisabled() {
-    m_speeds = new ChassisSpeeds(0, 0, 0);
+    _moduleStates = m_kinematics.toSwerveModuleStates(new ChassisSpeeds(0, 0, 0));
   }
 
   @Override

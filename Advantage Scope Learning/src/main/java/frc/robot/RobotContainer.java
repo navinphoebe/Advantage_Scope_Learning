@@ -60,15 +60,11 @@ public class RobotContainer {
   SendableChooser<Command> m_positionChooser = m_redChooser;
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    switch (Constants.currentMode) {
-    case REAL:
+    if (Robot.isReal()) {
       m_drivetrain = new DrivetrainSubsystemReal();
-    case SIM:
+    } else {
       m_drivetrain = new DrivetrainSubsystemSim();
-    default:
-      m_drivetrain = new DrivetrainSubsystemSim();
-      break;
-  }
+    }
     // Configure the trigger bindings
     configureBindings();
 
