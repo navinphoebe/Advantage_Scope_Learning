@@ -28,6 +28,7 @@ import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.Robot;
 
 import static frc.robot.subsystems.DrivetrainSubsystemConstants.*;
@@ -168,6 +169,11 @@ public class DrivetrainSubsystemReal extends SubsystemBase implements Drivetrain
     // _driveCharacteristics = new DriveCharacteristics();
 
     SmartDashboard.putData("HardwareOdometry Field", _field2d);
+  }
+
+  @Override
+  public double getMaxVelocity() {
+    return MAX_VELOCITY_METERS_PER_SECOND;
   }
 
   @Override

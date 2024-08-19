@@ -44,8 +44,9 @@ public class DrivetrainDefaultCommand extends Command {
     x = applyDeadband(x);
     y = applyDeadband(y);
     r = applyDeadband(r);
-    x = x * Constants.MAX_VELOCITY_METERS_PER_SECOND;
-    y = y * Constants.MAX_VELOCITY_METERS_PER_SECOND;
+    double maxVelocity = m_drivetrain.getMaxVelocity();
+    x = x * maxVelocity;
+    y = y * maxVelocity;
     r = r * Constants.DRIVE_MAX_TURN_RADIANS_PER_SECOND;
 
     _chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(x, y, r, m_drivetrain.getGyroscopeRotation());

@@ -10,6 +10,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 
 public interface Drivetrain extends Subsystem {
+  public double MAX_VELOCITY_METERS_PER_SECOND = 0;
   
   public void drive(ChassisSpeeds speeds);
 
@@ -18,4 +19,6 @@ public interface Drivetrain extends Subsystem {
   public void resetPose(Pose2d pose);
 
   public void setDisabled();
+
+  public double getMaxVelocity();
 }
