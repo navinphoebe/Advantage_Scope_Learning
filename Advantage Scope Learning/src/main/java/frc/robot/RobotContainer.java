@@ -13,6 +13,7 @@ import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.DrivetrainSwerveDrive;
 import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.SecondMechanism;
 
 import java.util.List;
 
@@ -49,6 +50,7 @@ public class RobotContainer {
   public final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
   public final DrivetrainSwerveDrive m_swerveDrive = new DrivetrainSwerveDrive();
   private final Arm m_arm = new Arm();
+  private final SecondMechanism m_mech = new SecondMechanism();
 
   SendableChooser<Command> m_chooser = new SendableChooser<>();
   SendableChooser<Command> m_redChooser = new SendableChooser<>();
@@ -79,12 +81,11 @@ public class RobotContainer {
     // cancelling on release.
     m_swerveDrive.setDefaultCommand(getSwerveDriveCommand());
     
-    /* m_driverController.b().onTrue(m_arm.initialPosition());
-    m_driverController.x().onTrue(m_arm.groundPickup());
-    m_driverController.y().onTrue(m_arm.defendedScoring());
-    m_driverController.a().onTrue(m_arm.ampScoring()); */
     m_driverController.a().onTrue(new ResetPose(m_swerveDrive)); // X button on Logitech controller
-
+    m_driverController.pov(0).onTrue(m_arm.ampScoring());
+    m_driverController.pov(180).onTrue(m_arm.defendedScoring());
+    m_driverController.pov(90).onTrue(m_mech.Position1());
+    m_driverController.pov(270).onTrue(m_mech.Position2());
     m_chooser.setDefaultOption("Follow Path", getFollowTestPathCommand());
     m_chooser.addOption("On the Fly", getOnTheFlyPathComamand());
     m_chooser.addOption("Navagation Grid", getNavigationGridDemoPathCommand());

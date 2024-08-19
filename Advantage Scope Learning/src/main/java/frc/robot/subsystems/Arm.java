@@ -18,12 +18,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 
-// @AutoLog
 public class Arm extends SubsystemBase {
   /** Creates a new Arm. */
   public double angle1;
   public double angle2;
-  @AutoLogOutput
   public Mechanism2d mech = new Mechanism2d(3, 3);
   public MechanismLigament2d m_wrist;
   public MechanismLigament2d m_wrist2;
@@ -37,7 +35,7 @@ public class Arm extends SubsystemBase {
     root = mech.getRoot("climber", 2, 0);
     m_wrist = root.append(new MechanismLigament2d("wrist", 0.5, 100, 6, new Color8Bit(Color.kPurple)));
     m_wrist2 = m_wrist.append(new MechanismLigament2d("wrist", 0.5, 100, 6, new Color8Bit(Color.kPurple)));
-    SmartDashboard.putData("MyMechanism", mech);
+    SmartDashboard.putData("First Mechanism", mech);
   }
 
   public Command initialPosition() {
@@ -84,6 +82,6 @@ public class Arm extends SubsystemBase {
   public void periodic() {
     m_wrist.setAngle(angle1);
     m_wrist2.setAngle(angle2);
-    SmartDashboard.putData("MyMechanism", mech);
+    SmartDashboard.putData("First Mechanism", mech);
   }
 }
