@@ -45,8 +45,8 @@ public class RobotContainer {
   private final CommandXboxController m_driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
 
-  private final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
-  private final DrivetrainSwerveDrive m_swerveDrive = new DrivetrainSwerveDrive();
+  public final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
+  public final DrivetrainSwerveDrive m_swerveDrive = new DrivetrainSwerveDrive();
   private final Arm m_arm = new Arm();
 
   SendableChooser<Command> m_chooser = new SendableChooser<>();

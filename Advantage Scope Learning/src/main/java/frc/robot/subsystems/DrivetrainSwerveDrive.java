@@ -146,6 +146,10 @@ public class DrivetrainSwerveDrive extends SubsystemBase {
     m_speeds = speeds;
   }
 
+  public void setDisabled() {
+    m_speeds = new ChassisSpeeds(0, 0 , 0);
+  }
+
   @Override
   public void periodic() {
     SwerveModuleState[] moduleStates = m_kinematics.toSwerveModuleStates(m_speeds);
