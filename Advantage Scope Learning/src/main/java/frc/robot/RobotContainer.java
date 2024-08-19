@@ -8,6 +8,7 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.DrivetrainDefaultCommand;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.ResetPose;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.DrivetrainSwerveDrive;
@@ -78,10 +79,11 @@ public class RobotContainer {
     // cancelling on release.
     m_swerveDrive.setDefaultCommand(getSwerveDriveCommand());
     
-    m_driverController.b().onTrue(m_arm.initialPosition());
+    /* m_driverController.b().onTrue(m_arm.initialPosition());
     m_driverController.x().onTrue(m_arm.groundPickup());
     m_driverController.y().onTrue(m_arm.defendedScoring());
-    m_driverController.a().onTrue(m_arm.ampScoring());
+    m_driverController.a().onTrue(m_arm.ampScoring()); */
+    m_driverController.a().onTrue(new ResetPose(m_swerveDrive)); // X button on Logitech controller
 
     m_chooser.setDefaultOption("Follow Path", getFollowTestPathCommand());
     m_chooser.addOption("On the Fly", getOnTheFlyPathComamand());
