@@ -9,18 +9,20 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants;
 import frc.robot.Robot;
-import frc.robot.subsystems.DrivetrainSubsystem;
+import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.DrivetrainSubsystemSim;
 import frc.robot.subsystems.DrivetrainSwerveDrive;
 
 public class DrivetrainDefaultCommand extends Command {
-  private DrivetrainSwerveDrive m_drivetrain;
+  private Drivetrain m_drivetrain;
   private CommandXboxController m_driverController;
   private ChassisSpeeds _chassisSpeeds = new ChassisSpeeds(0,0,0);
   /** Creates a new DrivetrainDefaultCommand. */
-  public DrivetrainDefaultCommand(DrivetrainSwerveDrive drivetrain, CommandXboxController driverController) {
+  public DrivetrainDefaultCommand(Drivetrain drivetrain, CommandXboxController driverController) {
     m_driverController = driverController;
     m_drivetrain = drivetrain;
     addRequirements(m_drivetrain);
@@ -46,9 +48,9 @@ public class DrivetrainDefaultCommand extends Command {
     y = y * Constants.MAX_VELOCITY_METERS_PER_SECOND;
     r = r * Constants.DRIVE_MAX_TURN_RADIANS_PER_SECOND;
 
-    _chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(x, y, r, new Rotation2d(m_drivetrain.m_gyro.getAngle()));
+    _chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(x, y, r, m_drivetrain.getGyroscopeRotation());
 
-    m_drivetrain.driveFieldRelative(_chassisSpeeds);
+    m_drivetrain.drive(_chassisSpeeds);
   }
 
   private double applyDeadband(double x) {

@@ -10,7 +10,9 @@ import frc.robot.commands.DrivetrainDefaultCommand;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.ResetPose;
 import frc.robot.subsystems.Arm;
-import frc.robot.subsystems.DrivetrainSubsystem;
+import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.DrivetrainSubsystemReal;
+import frc.robot.subsystems.DrivetrainSubsystemSim;
 import frc.robot.subsystems.DrivetrainSwerveDrive;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.SecondMechanism;
@@ -47,8 +49,8 @@ public class RobotContainer {
   private final CommandXboxController m_driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
 
-  public final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
-  public final DrivetrainSwerveDrive m_swerveDrive = new DrivetrainSwerveDrive();
+  public Drivetrain m_drivetrain;
+  // public final DrivetrainSwerveDrive m_swerveDrive = new DrivetrainSwerveDrive();
   private final Arm m_arm = new Arm();
   private final SecondMechanism m_mech = new SecondMechanism();
 
@@ -58,6 +60,15 @@ public class RobotContainer {
   SendableChooser<Command> m_positionChooser = m_redChooser;
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    switch (Constants.currentMode) {
+    case REAL:
+      m_drivetrain = new DrivetrainSubsystemReal();
+    case SIM:
+      m_drivetrain = new DrivetrainSubsystemSim();
+    default:
+      m_drivetrain = new DrivetrainSubsystemSim();
+      break;
+  }
     // Configure the trigger bindings
     configureBindings();
 
@@ -79,9 +90,9 @@ public class RobotContainer {
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
-    m_swerveDrive.setDefaultCommand(getSwerveDriveCommand());
+    m_drivetrain.setDefaultCommand(getSwerveDriveCommand());
     
-    m_driverController.a().onTrue(new ResetPose(m_swerveDrive)); // X button on Logitech controller
+    m_driverController.a().onTrue(new ResetPose(m_drivetrain)); // X button on Logitech controller
     m_driverController.pov(0).onTrue(m_arm.ampScoring());
     m_driverController.pov(180).onTrue(m_arm.defendedScoring());
     m_driverController.pov(90).onTrue(m_mech.Position1());
@@ -200,6 +211,6 @@ public class RobotContainer {
 
   public Command getSwerveDriveCommand() {
     return new DrivetrainDefaultCommand(
-        m_swerveDrive, m_driverController);
+        m_drivetrain, m_driverController);
   }
 }

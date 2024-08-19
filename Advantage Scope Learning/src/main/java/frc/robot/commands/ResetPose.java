@@ -6,14 +6,14 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.DrivetrainSwerveDrive;
+import frc.robot.subsystems.Drivetrain;
 
 public class ResetPose extends Command {
   /** Creates a new ResetPose. */
-  private DrivetrainSwerveDrive m_swerveDrive;
-  public ResetPose(DrivetrainSwerveDrive swerveDrive) {
-    m_swerveDrive = swerveDrive;
-    addRequirements(m_swerveDrive);
+  private Drivetrain m_drivetrain;
+  public ResetPose(Drivetrain drivetrain) {
+    m_drivetrain = drivetrain;
+    addRequirements(m_drivetrain);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -24,7 +24,7 @@ public class ResetPose extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_swerveDrive.resetPose(new Pose2d());
+    m_drivetrain.resetPose(new Pose2d());
   }
 
   // Called once the command ends or is interrupted.
