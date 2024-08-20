@@ -22,22 +22,28 @@ public class Arm extends SubsystemBase {
   /** Creates a new Arm. */
   public double angle1;
   public double angle2;
-  public Mechanism2d mech = new Mechanism2d(3, 3);
+  public Mechanism2d mech = new Mechanism2d(100, 100);
   public MechanismLigament2d m_wrist;
   public MechanismLigament2d m_wrist2;
+  public MechanismLigament2d m_wrist3;
+  public MechanismLigament2d m_wrist4;
+  public MechanismLigament2d m_wrist5;
   public MechanismRoot2d root;
 
   public Arm() {
-    angle1 = 100;
-    angle2 = 100;
+    angle1 = -100;
+    // angle2 = 100;
     // the main mechanism object
     // the mechanism root node
-    root = mech.getRoot("climber", 2, 0);
-    m_wrist = root.append(new MechanismLigament2d("wrist", 0.5, 100, 6, new Color8Bit(Color.kPurple)));
-    m_wrist2 = m_wrist.append(new MechanismLigament2d("wrist", 0.5, 100, 6, new Color8Bit(Color.kPurple)));
+    root = mech.getRoot("climber", 75, 0);
+    m_wrist = root.append(new MechanismLigament2d("base", 40, 180, 6, new Color8Bit(Color.kBlack)));
+    m_wrist2 = m_wrist.append(new MechanismLigament2d("base1", 16, -90, 6, new Color8Bit(Color.kBlack)));
+    m_wrist3 = m_wrist2.append(new MechanismLigament2d("wrist1", 40.0, -100, 6, new Color8Bit(Color.kRed)));
+    m_wrist4 = m_wrist3.append(new MechanismLigament2d("wrist2", 8.0, 130, 6, new Color8Bit(Color.kGreen)));
+    m_wrist5 = m_wrist3.append(new MechanismLigament2d("wrist3", 8.0, -50, 6, new Color8Bit(Color.kGreen)));
     SmartDashboard.putData("First Mechanism", mech);
   }
-
+/* 
   public Command initialPosition() {
     // Inline construction of command goes here.
     // Subsystem::RunOnce implicitly requires `this` subsystem.
@@ -76,12 +82,11 @@ public class Arm extends SubsystemBase {
           angle1 = 90;
           angle2 = -160;
         });
-  } 
+  }  */
 
   @Override
   public void periodic() {
-    m_wrist.setAngle(angle1);
-    m_wrist2.setAngle(angle2);
+    m_wrist3.setAngle(angle1);
     SmartDashboard.putData("First Mechanism", mech);
   }
 }

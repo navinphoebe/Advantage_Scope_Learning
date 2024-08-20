@@ -8,6 +8,7 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.DrivetrainDefaultCommand;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.MoveArmToPositionInOneSecond;
 import frc.robot.commands.ResetPose;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Drivetrain;
@@ -89,8 +90,8 @@ public class RobotContainer {
     m_drivetrain.setDefaultCommand(getSwerveDriveCommand());
     
     m_driverController.a().onTrue(new ResetPose(m_drivetrain)); // X button on Logitech controller
-    m_driverController.pov(0).onTrue(m_arm.ampScoring());
-    m_driverController.pov(180).onTrue(m_arm.defendedScoring());
+    m_driverController.pov(0).onTrue(new MoveArmToPositionInOneSecond(m_arm, -100));
+    m_driverController.pov(180).onTrue(new MoveArmToPositionInOneSecond(m_arm, -80));
     m_driverController.pov(90).onTrue(m_mech.Position1());
     m_driverController.pov(270).onTrue(m_mech.Position2());
     m_chooser.setDefaultOption("Follow Path", getFollowTestPathCommand());
