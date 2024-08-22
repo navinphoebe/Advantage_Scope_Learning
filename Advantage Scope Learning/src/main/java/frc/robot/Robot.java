@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.commands.ResetPose;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -69,7 +70,7 @@ public class Robot extends LoggedRobot {
     } else if (alliance.isPresent() && alliance.get() == DriverStation.Alliance.Blue) {
       m_robotContainer.m_positionChooser = m_robotContainer.m_blueChooser;
     } 
-    
+    m_robotContainer.m_driverController.a().onTrue(new ResetPose(m_robotContainer.m_drivetrain, m_robotContainer.getPoseForReset()));
     SmartDashboard.putData("Target Chooser", m_robotContainer.m_positionChooser);
     SmartDashboard.putData("Target Position Command", m_robotContainer.getTargetPositionCommand());
   }

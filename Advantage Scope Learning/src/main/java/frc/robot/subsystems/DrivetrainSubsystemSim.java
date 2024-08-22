@@ -119,7 +119,7 @@ public class DrivetrainSubsystemSim extends SubsystemBase implements Drivetrain 
   }
 
   @Override
-  public void resetPose(Pose2d pose) {
+  public void resetPose(Pose2d poseReset) {
     SwerveModuleState[] moduleStates = m_kinematics.toSwerveModuleStates(m_speeds);
 
     frontLeft = moduleStates[0];
@@ -138,7 +138,8 @@ public class DrivetrainSubsystemSim extends SubsystemBase implements Drivetrain 
       new SwerveModulePosition(frontRightDistance, frontRight.angle),
       new SwerveModulePosition(backLeftDistance, backLeft.angle),
       new SwerveModulePosition(backRightDistance, backRight.angle)
-      }, pose);
+      }, poseReset);
+    // m_gyro.reset();
   }
 
   public ChassisSpeeds getRobotRelativeSpeeds() {

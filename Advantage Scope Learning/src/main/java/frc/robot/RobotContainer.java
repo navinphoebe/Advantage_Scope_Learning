@@ -47,7 +47,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandXboxController m_driverController =
+  public final CommandXboxController m_driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
 
   public Drivetrain m_drivetrain;
@@ -56,9 +56,9 @@ public class RobotContainer {
   private final SecondMechanism m_mech = new SecondMechanism();
 
   SendableChooser<Command> m_chooser = new SendableChooser<>();
-  SendableChooser<Command> m_redChooser = new SendableChooser<>();
-  SendableChooser<Command> m_blueChooser = new SendableChooser<>();
-  SendableChooser<Command> m_positionChooser = m_redChooser;
+  SendableChooser<Pose2d> m_redChooser = new SendableChooser<>();
+  SendableChooser<Pose2d> m_blueChooser = new SendableChooser<>();
+  SendableChooser<Pose2d> m_positionChooser = m_redChooser;
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     if (Robot.isReal()) {
@@ -89,7 +89,7 @@ public class RobotContainer {
     // cancelling on release.
     m_drivetrain.setDefaultCommand(getSwerveDriveCommand());
     
-    m_driverController.a().onTrue(new ResetPose(m_drivetrain)); // X button on Logitech controller
+    //m_driverController.a().onTrue(new ResetPose(m_drivetrain, m_positionChooser)); // X button on Logitech controller
     m_driverController.pov(0).onTrue(new MoveArmToPositionInOneSecond(m_arm, -100));
     m_driverController.pov(180).onTrue(new MoveArmToPositionInOneSecond(m_arm, -80));
     m_driverController.pov(90).onTrue(m_mech.Position1());
@@ -99,30 +99,36 @@ public class RobotContainer {
     m_chooser.addOption("Navagation Grid", getNavigationGridDemoPathCommand());
     SmartDashboard.putData(m_chooser);
     
-    m_redChooser.setDefaultOption("Red Amp Scoring", goToTargetPosition(13.97, 7.18, 90));
-    m_redChooser.addOption("Red Speaker 1", goToTargetPosition(15.78, 6.70, 135));
-    m_redChooser.addOption("Red Speaker 2", goToTargetPosition(15.20, 5.60, 180));
-    m_redChooser.addOption("Red Speaker 3", goToTargetPosition(15.70, 4.35, -135));
-    m_redChooser.addOption("Red Stage 1", goToTargetPosition(12.37, 5.09, -135));
-    m_redChooser.addOption("Red Stage 2", goToTargetPosition(12.37, 3.05, 0));
-    m_redChooser.addOption("Red Stage 3", goToTargetPosition(10.59, 4.08, 135));
-    m_redChooser.addOption("Red Notes Pickup 1", goToTargetPosition(.47, 1.25, -90));
-    m_redChooser.addOption("Red Notes Pickup 2", goToTargetPosition(1.04, 1.01, -90));
-    m_redChooser.addOption("Red Notes Pickup 3", goToTargetPosition(1.60, .53, -90));
+    m_redChooser.setDefaultOption("Red Amp Scoring", new Pose2d(13.97, 7.18, new Rotation2d(Math.toRadians(90))));
+    m_redChooser.addOption("Red Speaker 1", new Pose2d(15.78, 6.70, new Rotation2d(Math.toRadians(135))));
+    m_redChooser.addOption("Red Speaker 2", new Pose2d(15.20, 5.60, new Rotation2d(Math.toRadians(180))));
+    m_redChooser.addOption("Red Speaker 3", new Pose2d(15.70, 4.35, new Rotation2d(Math.toRadians(-135))));
+    m_redChooser.addOption("Red Stage 1", new Pose2d(12.37, 5.09, new Rotation2d(Math.toRadians(-135))));
+    m_redChooser.addOption("Red Stage 2", new Pose2d(12.37, 3.05, new Rotation2d(Math.toRadians(0))));
+    m_redChooser.addOption("Red Stage 3", new Pose2d(10.59, 4.08, new Rotation2d(Math.toRadians(135))));
+    m_redChooser.addOption("Red Notes Pickup 1", new Pose2d(.47, 1.25, new Rotation2d(Math.toRadians(-90))));
+    m_redChooser.addOption("Red Notes Pickup 2", new Pose2d(1.04, 1.01, new Rotation2d(Math.toRadians(90))));
+    m_redChooser.addOption("Red Notes Pickup 3", new Pose2d(1.60, .53, new Rotation2d(Math.toRadians(-90))));
 
-    m_blueChooser.setDefaultOption("Blue Amp Scoring", goToTargetPosition(1.66,7.61, 90));
-    m_blueChooser.addOption("Blue Speaker 1", goToTargetPosition(.75, 6.01, 45));
-    m_blueChooser.addOption("Blue Speaker 2", goToTargetPosition(1.45,5.56, 0));
-    m_blueChooser.addOption("Blue Speaker 3", goToTargetPosition(.76,4.26, -45));
-    m_blueChooser.addOption("Blue Stage 1", goToTargetPosition(4.17, 5.05, -45));
-    m_blueChooser.addOption("Blue Stage 2", goToTargetPosition(4.28, 3.16, 45));
-    m_blueChooser.addOption("Blue Stage 3", goToTargetPosition(5.98, 4.13, 180));
-    m_blueChooser.addOption("Blue Notes Pickup 1", goToTargetPosition(16.09, 1.41, 0));
-    m_blueChooser.addOption("Blue Notes Pickup 2", goToTargetPosition(15.52, 1.10, -45));
-    m_blueChooser.addOption("Blue Notes Pickup 3", goToTargetPosition(14.85, .76, -45)); 
+    m_blueChooser.setDefaultOption("Blue Amp Scoring", new Pose2d(1.66,7.61, new Rotation2d(Math.toRadians(90))));
+    m_blueChooser.addOption("Blue Speaker 1", new Pose2d(.75, 6.01, new Rotation2d()));
+    m_blueChooser.addOption("Blue Speaker 2", new Pose2d(1.45,5.56, new Rotation2d(Math.toRadians(0))));
+    m_blueChooser.addOption("Blue Speaker 3", new Pose2d(.76,4.26, new Rotation2d(Math.toRadians(-45))));
+    m_blueChooser.addOption("Blue Stage 1", new Pose2d(4.17, 5.05, new Rotation2d(Math.toRadians(-45))));
+    m_blueChooser.addOption("Blue Stage 2", new Pose2d(4.28, 3.16, new Rotation2d(Math.toRadians(0))));
+    m_blueChooser.addOption("Blue Stage 3", new Pose2d(5.98, 4.13, new Rotation2d(Math.toRadians(180))));
+    m_blueChooser.addOption("Blue Notes Pickup 1", new Pose2d(16.09, 1.41, new Rotation2d(Math.toRadians(0))));
+    m_blueChooser.addOption("Blue Notes Pickup 2", new Pose2d(15.52, 1.10, new Rotation2d(Math.toRadians(-45))));
+    m_blueChooser.addOption("Blue Notes Pickup 3", new Pose2d(14.85, .76, new Rotation2d(Math.toRadians(-45)))); 
 
     SmartDashboard.putData("Target Position Command", getTargetPositionCommand());
     SmartDashboard.putData("Target Chooser", m_positionChooser);
+    // m_driverController.button(0).onTrue(new ResetPose(m_drivetrain, m_positionChooser));
+    m_driverController.a().onTrue(new ResetPose(m_drivetrain, getPoseForReset()));
+  }
+
+  public Pose2d getPoseForReset() {
+    return m_positionChooser.getSelected();
   }
 
   /**
@@ -138,7 +144,7 @@ public class RobotContainer {
     m_positionChooser = m_redChooser;
   }
   public Command getTargetPositionCommand() {
-    return m_positionChooser.getSelected();
+    return goToTargetPosition(m_positionChooser.getSelected());
   }
 
   public Command getAutonomousCommand() {
@@ -189,8 +195,8 @@ public class RobotContainer {
     );
   }
 
-  public Command goToTargetPosition(double x, double y, double rotationDegrees) { 
-    Pose2d targetPose = new Pose2d(x, y, Rotation2d.fromDegrees(rotationDegrees));
+  public Command goToTargetPosition(Pose2d pose) { 
+    Pose2d targetPose = pose;
 
     // Create the constraints to use while pathfinding
     PathConstraints constraints = new PathConstraints(

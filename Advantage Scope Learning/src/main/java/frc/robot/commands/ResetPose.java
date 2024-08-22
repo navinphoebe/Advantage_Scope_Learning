@@ -11,8 +11,10 @@ import frc.robot.subsystems.Drivetrain;
 public class ResetPose extends Command {
   /** Creates a new ResetPose. */
   private Drivetrain m_drivetrain;
-  public ResetPose(Drivetrain drivetrain) {
+  private Pose2d m_pose;
+  public ResetPose(Drivetrain drivetrain, Pose2d pose) {
     m_drivetrain = drivetrain;
+    m_pose = pose;
     addRequirements(m_drivetrain);
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -24,7 +26,7 @@ public class ResetPose extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_drivetrain.resetPose(new Pose2d());
+    m_drivetrain.resetPose(m_pose);
   }
 
   // Called once the command ends or is interrupted.
