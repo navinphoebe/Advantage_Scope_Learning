@@ -97,6 +97,7 @@ public class DrivetrainSubsystemReal extends SubsystemBase implements Drivetrain
 
   /** Creates a new DrivetrainSubsystem. */
   public DrivetrainSubsystemReal() {
+    SmartDashboard.putData("Field Swerve", _field2d);
         MkModuleConfiguration moduleConfig = new MkModuleConfiguration();
       moduleConfig.setSteerCurrentLimit(30.0);
       moduleConfig.setDriveCurrentLimit(40.0);
@@ -232,6 +233,8 @@ public class DrivetrainSubsystemReal extends SubsystemBase implements Drivetrain
     hardwareStates[3] = ToSwerveModuleState(m_backRightModule);
 
     _swervePublisher.set(states);
+
+    _field2d.setRobotPose(_odometryFromHardware.getPoseMeters()); 
   }
 
   private static SwerveModuleState ToSwerveModuleState(SwerveModule module) {

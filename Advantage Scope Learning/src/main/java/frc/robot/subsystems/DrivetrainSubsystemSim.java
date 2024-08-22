@@ -139,7 +139,6 @@ public class DrivetrainSubsystemSim extends SubsystemBase implements Drivetrain 
       new SwerveModulePosition(backLeftDistance, backLeft.angle),
       new SwerveModulePosition(backRightDistance, backRight.angle)
       }, poseReset);
-    // m_gyro.reset();
   }
 
   public ChassisSpeeds getRobotRelativeSpeeds() {

@@ -50,7 +50,7 @@ public class DrivetrainDefaultCommand extends Command {
     r = r * Constants.DRIVE_MAX_TURN_RADIANS_PER_SECOND;
 
     _chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(x, y, r, m_drivetrain.getGyroscopeRotation());
-
+    
     m_drivetrain.drive(_chassisSpeeds);
   }
 
